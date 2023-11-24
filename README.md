@@ -10,17 +10,17 @@ The user will be able to select the type of activity they want to engage in, e.g
 
 
 
-Physical Activities: 
+## Physical Activities: 
 
-Team member responsible: Breda Logan 
+### Team member responsible: Breda Logan 
 
 Engaging in regular physical activity is known to have a positive impact on mental well-being. When users opt for physical activities, they will have the opportunity to select from a variety of options including cardio, toning, or stretching exercises. They will then return a recommended activity, along with its suggested duration and a brief description. Additionally, users will have the flexibility to switch to a different activity if they so choose. 
 
  
 
-Mental Health Activities: 
+##Mental Health Activities: 
 
-Team member responsible: Aneta Kotas 
+###Team member responsible: Aneta Kotas 
 
 Another section in the HappyMind application is gratitude list – proven method of shifting your thoughts to the positive experiences in your life, which leads to several positive benefits to one's well-being. 
 
