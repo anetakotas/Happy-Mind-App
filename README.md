@@ -18,9 +18,9 @@ Engaging in regular physical activity is known to have a positive impact on ment
 
  
 
-##Mental Health Activities: 
+## Mental Health Activities: 
 
-###Team member responsible: Aneta Kotas 
+### Team member responsible: Aneta Kotas 
 
 Another section in the HappyMind application is gratitude list – proven method of shifting your thoughts to the positive experiences in your life, which leads to several positive benefits to one's well-being. 
 
