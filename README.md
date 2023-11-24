@@ -1,6 +1,6 @@
 # Happy-Mind-App
-CA for Object Oriented Programming class 2023
-Created by Aneta Kotas and Breda Logan
+CA for Object Oriented Programming class 2023.
+Created by Aneta Kotas and [Breda Logan](https://github.com/blogan1974).
 
 Our project is dedicated to advancing the United Nations' 3rd Sustainable Development Goal, which centres on promoting Good Health and Well-Being. Our specific focus lies in nurturing positive mental health by providing activities that have the potential to enhance well-being. The core idea is to offer users personalised suggestions for activities that can contribute to improved mental health, especially during moments when self-motivation may be a challenge. 
 
