@@ -23,7 +23,7 @@ import javax.swing.JOptionPane;
  * @author necia
  */
 public class MindfulnessList extends MindfulnessListActivity {
-    private ArrayList<String> mindfulnessList;
+    private ArrayList<MindfulnessEntry> mindfulnessList;
     private MindfulnessEntry mindfulnessEntry;
     private Connection conn;
     
@@ -32,8 +32,7 @@ public class MindfulnessList extends MindfulnessListActivity {
     }
     
     private MindfulnessList() {
-        mindfulnessList = new ArrayList<>();
-        mindfulnessEntry = new MindfulnessEntry();
+        mindfulnessList = new ArrayList<MindfulnessEntry>();
     }
     
     private static MindfulnessList listInstance = new MindfulnessList();
@@ -42,11 +41,11 @@ public class MindfulnessList extends MindfulnessListActivity {
         return listInstance;
     }
     
-    public void addEntry(String entry) {
-        mindfulnessList.add(entry);
+    public void addEntry(MindfulnessEntry mindfulnessEntry) {
+        mindfulnessList.add(mindfulnessEntry);
     }
     
-    public String getEntry(int i) {
+    public MindfulnessEntry getEntry(int i) {
         return mindfulnessList.get(i);
     }
     
@@ -54,8 +53,8 @@ public class MindfulnessList extends MindfulnessListActivity {
         return mindfulnessList.size();
     }
     
-    public void updateEntry(int i, String editedEntry) {
-        String userEntry = mindfulnessList.set(i, editedEntry);
+    public void updateEntry(int i, MindfulnessEntry editedEntry) {
+        MindfulnessEntry userEntry = mindfulnessList.set(i, editedEntry);
     }
     
     public void deleteEntry(int i) {
@@ -69,31 +68,45 @@ public class MindfulnessList extends MindfulnessListActivity {
     }
     
     public ArrayList<String> getEntries() {
-        return mindfulnessList;
+        ArrayList<String> entryStrings = new ArrayList<>();
+        
+        for(MindfulnessEntry mindfulnessEntry: mindfulnessList) {
+            entryStrings.add(mindfulnessEntry.getUserEntry());
+        }
+        
+        return entryStrings;
     }
     
     public void readFile() throws FileNotFoundException, IOException, ClassNotFoundException, SQLException {
         this.getConnection();
         Statement statement = conn.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM Entry");
-        while(resultSet.next()) {
-            String userEntry = resultSet.getString("entryContext");
-            mindfulnessList.add(userEntry);
+        ResultSet results = statement.executeQuery("SELECT * FROM Entry");
+        while(results.next()) {
+            MindfulnessEntry mindfulnessEntry = null;
+            String userEntry = results.getString("entryContext");
+            mindfulnessEntry = new MindfulnessEntry(userEntry);
+            mindfulnessList.add(mindfulnessEntry);
         }
         conn.close();
     }
     
-    public void saveFile() {
-        try {
-            String entryContext = mindfulnessEntry.getUserEntry();
-            this.getConnection();
-            Statement statement = conn.createStatement();
-            statement.executeUpdate("INSERT INTO Entry (entryContext) VALUES('" + entryContext + "')");
-            conn.close();
-        }
-        catch(SQLException e) {
-            JOptionPane.showMessageDialog(null, e.toString());
-        }
+    public void saveFile(MindfulnessEntry mindfulnessEntry) throws FileNotFoundException, IOException, SQLException {
+//        try {
+//            
+//            String entryContext = mindfulnessEntry.getUserEntry();
+//            this.getConnection();
+//            Statement statement = conn.createStatement();
+//            statement.executeUpdate("INSERT INTO Entry(entryContext) VALUES('" + entryContext + "');");
+//            conn.close();
+//        }
+//        catch(SQLException e) {
+//            JOptionPane.showMessageDialog(null, e.toString());
+//        }
+          this.getConnection();
+          Statement statement = conn.createStatement();
+          String userEntry = mindfulnessEntry.getUserEntry();
+          statement.executeUpdate("INSERT INTO Entry(entryContext) VALUES('" + userEntry + "');");
+          conn.close();
     }
 }
 

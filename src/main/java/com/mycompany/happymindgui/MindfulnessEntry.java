@@ -1,5 +1,7 @@
 package com.mycompany.happymindgui;
 
+import java.io.Serializable;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -9,16 +11,16 @@ package com.mycompany.happymindgui;
  *
  * @author necia
  */
-public class MindfulnessEntry extends MindfulnessListActivity {
+public class MindfulnessEntry extends MindfulnessListActivity implements Serializable {
     private String userEntry;
     
-    public MindfulnessEntry() {
-        this.userEntry = "";
-    }
-
     public MindfulnessEntry(String userEntry) {
         this.userEntry = userEntry;
     }
+    
+    public MindfulnessEntry() {
+        this.userEntry = "";
+    } 
 
     public String getUserEntry() {
         return userEntry;

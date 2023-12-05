@@ -19,6 +19,7 @@ import javax.swing.JOptionPane;
 public class MindfulnessListGUI extends javax.swing.JFrame {
     MindfulnessList mindfulnessList;
     DefaultListModel listModel;
+    MindfulnessEntry mindfulnessEntry;
     /**
      * Creates new form MindfulnessList
      * @throws java.io.FileNotFoundException
@@ -178,6 +179,8 @@ public class MindfulnessListGUI extends javax.swing.JFrame {
 
     private void editEntryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editEntryActionPerformed
         // TODO add your handling code here:
+//        MindfulnessEntry mindfulnessEntry = new MindfulnessEntry();
+//        String userEntry 
     }//GEN-LAST:event_editEntryActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
@@ -192,11 +195,27 @@ public class MindfulnessListGUI extends javax.swing.JFrame {
 
     private void addEntryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addEntryActionPerformed
         // TODO add your handling code here:
-        MindfulnessEntry mindfulnessEntry = new MindfulnessEntry();
-        String userEntry = JOptionPane.showInputDialog("Enter your entry:");
-        mindfulnessList.addEntry(userEntry);
-        mindfulnessList.saveFile();
-        loadEntries();
+//        String userEntry = JOptionPane.showInputDialog("Enter your entry:");
+//        mindfulnessEntry = new MindfulnessEntry(userEntry);
+//        mindfulnessEntry.setUserEntry(userEntry);
+//        mindfulnessList.addEntry(userEntry);
+//        mindfulnessList.saveFile();
+//        System.out.println(userEntry);
+//        loadEntries();
+          String userEntry = JOptionPane.showInputDialog("Enter your entry:");
+          MindfulnessEntry mindfulnessEntry = null;
+          mindfulnessEntry = new MindfulnessEntry(userEntry);
+          mindfulnessList.addEntry(mindfulnessEntry);
+          System.out.println(mindfulnessEntry);
+        try {
+            mindfulnessList.saveFile(mindfulnessEntry);
+        } catch (IOException ex) {
+            Logger.getLogger(MindfulnessListGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(MindfulnessListGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+          loadEntries();
+          
     }//GEN-LAST:event_addEntryActionPerformed
 
     /**
