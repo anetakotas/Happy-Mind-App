@@ -7,7 +7,7 @@ package com.mycompany.happymindgui;
 
 /**
  *
- * @author necia
+ * @author Aneta Kotas
  */
 public class HappyMindGUI {
     public static void main(String[] args) {

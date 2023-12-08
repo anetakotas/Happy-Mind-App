@@ -6,8 +6,9 @@ package com.mycompany.happymindgui;
 
 /**
  *
- * @author necia
+ * @author Aneta Kotas
  */
+// Initial activity class
 public class Activity {
     
     public String getActivityName() {

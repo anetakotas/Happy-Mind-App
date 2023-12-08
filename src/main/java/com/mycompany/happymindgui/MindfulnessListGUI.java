@@ -4,44 +4,79 @@
  */
 package com.mycompany.happymindgui;
 
+import java.awt.Color;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JProgressBar;
 
 /**
  *
- * @author necia
+ * @author Aneta Kotas
  */
+//MindfulnessListGUI class
 public class MindfulnessListGUI extends javax.swing.JFrame {
+    //Initializing variables
     MindfulnessList mindfulnessList;
     DefaultListModel listModel;
     MindfulnessEntry mindfulnessEntry;
-    /**
-     * Creates new form MindfulnessList
-     * @throws java.io.FileNotFoundException
-     * @throws java.lang.ClassNotFoundException
-     * @throws java.sql.SQLException
-     */
+    JProgressBar pBar;
+    String deleteSelection;
+    int deleteIndex;
+    int goal;
+    JFrame gui;
+    
+    //Main function
     public MindfulnessListGUI() throws FileNotFoundException, IOException, ClassNotFoundException, SQLException {
         initComponents();
         setLocationRelativeTo(null);
         mindfulnessList = MindfulnessList.getListInstance();
-        mindfulnessList.readFile();
+        
+        //This prevents list from loading second time when going back from MainMenu
+        if(mindfulnessList.getSize() == 0) {
+            mindfulnessList.readFile();
+        }
+
         listModel = new DefaultListModel();
         loadEntries();
+        listDisplay.setModel(listModel);
+        
+        //Starting progress bar
+        System.out.println(deleteIndex);
+        dailyGoalProgress.setValue(0);
+        dailyGoalProgress.setStringPainted(true);
+        dailyGoalProgress.setVisible(true);
+        dailyGoalProgress.setForeground(Color.green);
+        goalNo.setText(mindfulnessList.loadGoal());
+        dailyGoalProgress.setValue(mindfulnessList.getSize());
+        dailyGoalProgress.setMaximum(Integer.parseInt(mindfulnessList.loadGoal()));
+        mindfulnessList.loadGoal();
+        
+        //Listener for when list item is pressed, saves deleteSelection and deleteIndex used for manipulations
+        listDisplay.getSelectionModel().addListSelectionListener(x -> {
+            deleteSelection = listDisplay.getSelectedValue();
+            deleteIndex = listDisplay.getSelectedIndex();
+            //Some regex for filtering part of the list items
+            if(deleteSelection != null) {
+                deleteSelection = deleteSelection.replaceAll("\\d+\\.\\s", "");
+            }
+        });
     }
     
-    private void loadEntries(){
+    //Loads all entries to the list
+    private void loadEntries() throws IOException, FileNotFoundException, ClassNotFoundException, SQLException{
         listModel.clear();
         for (String entryContext: mindfulnessList.getEntries()) {
             listModel.addElement(entryContext);
         }
-        listDisplay.setModel(listModel);
+        listDisplay.setModel(listModel); 
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -59,10 +94,11 @@ public class MindfulnessListGUI extends javax.swing.JFrame {
         searchEntry = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         listDisplay = new javax.swing.JList<>();
-        jButton5 = new javax.swing.JButton();
+        backButton = new javax.swing.JButton();
         dailyGoalProgress = new javax.swing.JProgressBar();
         jLabel2 = new javax.swing.JLabel();
         changeGoal = new javax.swing.JButton();
+        goalNo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -90,10 +126,20 @@ public class MindfulnessListGUI extends javax.swing.JFrame {
         deleteEntry.setText("Delete Entry");
         deleteEntry.setDefaultCapable(false);
         deleteEntry.setFocusPainted(false);
+        deleteEntry.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteEntryActionPerformed(evt);
+            }
+        });
 
         searchEntry.setText("Search For Entry");
         searchEntry.setDefaultCapable(false);
         searchEntry.setFocusPainted(false);
+        searchEntry.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchEntryActionPerformed(evt);
+            }
+        });
 
         listDisplay.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -102,18 +148,18 @@ public class MindfulnessListGUI extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(listDisplay);
 
-        jButton5.setText("Back");
-        jButton5.setDefaultCapable(false);
-        jButton5.setFocusPainted(false);
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        backButton.setText("Back");
+        backButton.setDefaultCapable(false);
+        backButton.setFocusPainted(false);
+        backButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                backButtonActionPerformed(evt);
             }
         });
 
-        jLabel2.setText("Today's goal:");
+        jLabel2.setText("Goal:");
 
-        changeGoal.setText("Change Daily Goal");
+        changeGoal.setText("Change Goal");
         changeGoal.setDefaultCapable(false);
         changeGoal.setFocusPainted(false);
         changeGoal.addActionListener(new java.awt.event.ActionListener() {
@@ -121,6 +167,8 @@ public class MindfulnessListGUI extends javax.swing.JFrame {
                 changeGoalActionPerformed(evt);
             }
         });
+
+        goalNo.setText("0");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -135,16 +183,18 @@ public class MindfulnessListGUI extends javax.swing.JFrame {
                         .addComponent(editEntry, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(deleteEntry, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(searchEntry, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jButton5))
+                    .addComponent(backButton))
                 .addGap(50, 50, 50)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(goalNo, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(dailyGoalProgress, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(changeGoal))
-                .addContainerGap(55, Short.MAX_VALUE))
+                .addContainerGap(60, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -164,49 +214,69 @@ public class MindfulnessListGUI extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(12, 12, 12)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(dailyGoalProgress, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(goalNo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(dailyGoalProgress, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(changeGoal)
-                            .addComponent(jButton5))))
-                .addContainerGap(30, Short.MAX_VALUE))
+                            .addComponent(backButton))))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    //EDIT ENTRY
     private void editEntryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editEntryActionPerformed
         // TODO add your handling code here:
-//        MindfulnessEntry mindfulnessEntry = new MindfulnessEntry();
-//        String userEntry 
+        try {
+            mindfulnessList.updateEntry(deleteIndex, deleteSelection);
+        } catch (SQLException ex) {
+            Logger.getLogger(MindfulnessListGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            loadEntries();
+        } catch (IOException ex) {
+            Logger.getLogger(MindfulnessListGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(MindfulnessListGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(MindfulnessListGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_editEntryActionPerformed
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+    //BACK BUTTON
+    private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
         // TODO add your handling code here:
         new MainMenu().setVisible(true);
         this.setVisible(false);
-    }//GEN-LAST:event_jButton5ActionPerformed
+    }//GEN-LAST:event_backButtonActionPerformed
 
+    //CHANGE GOAL BUTTON, asks user for new goal number, sets that goal on GUI and adjusts progress bar
     private void changeGoalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeGoalActionPerformed
         // TODO add your handling code here:
+        String newGoal = JOptionPane.showInputDialog("Input new goal:");
+        goal = Integer.parseInt(newGoal);
+        goalNo.setText(newGoal);
+        dailyGoalProgress.setValue(mindfulnessList.getSize());
+        dailyGoalProgress.setMaximum(goal);
+        try {
+            mindfulnessList.changeGoal(goal);
+        } catch (SQLException ex) {
+            Logger.getLogger(MindfulnessListGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_changeGoalActionPerformed
 
+    // ADD ENTRY BUTTON, asks user for new entry and adds it to the list and database, then reloads entries
     private void addEntryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addEntryActionPerformed
         // TODO add your handling code here:
-//        String userEntry = JOptionPane.showInputDialog("Enter your entry:");
-//        mindfulnessEntry = new MindfulnessEntry(userEntry);
-//        mindfulnessEntry.setUserEntry(userEntry);
-//        mindfulnessList.addEntry(userEntry);
-//        mindfulnessList.saveFile();
-//        System.out.println(userEntry);
-//        loadEntries();
           String userEntry = JOptionPane.showInputDialog("Enter your entry:");
           MindfulnessEntry mindfulnessEntry = null;
           mindfulnessEntry = new MindfulnessEntry(userEntry);
           mindfulnessList.addEntry(mindfulnessEntry);
-          System.out.println(mindfulnessEntry);
+          System.out.println(mindfulnessEntry.getEntryIndex());
         try {
             mindfulnessList.saveFile(mindfulnessEntry);
         } catch (IOException ex) {
@@ -214,9 +284,57 @@ public class MindfulnessListGUI extends javax.swing.JFrame {
         } catch (SQLException ex) {
             Logger.getLogger(MindfulnessListGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
-          loadEntries();
-          
+        try {
+            loadEntries();
+        } catch (IOException ex) {
+            Logger.getLogger(MindfulnessListGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(MindfulnessListGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(MindfulnessListGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        // Updates progress bar
+        dailyGoalProgress.setValue(mindfulnessList.getSize());
     }//GEN-LAST:event_addEntryActionPerformed
+
+    //DELETE ENTRY BUTTON, deletes entry depending on which item on the list is pressed, then reloads the list
+    private void deleteEntryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteEntryActionPerformed
+        
+        // TODO add your handling code here:
+        try {
+            mindfulnessList.deleteEntry(deleteIndex, deleteSelection);
+        } catch (SQLException ex) {
+            Logger.getLogger(MindfulnessListGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(MindfulnessListGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(MindfulnessListGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            loadEntries();
+        } catch (IOException ex) {
+            Logger.getLogger(MindfulnessListGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(MindfulnessListGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(MindfulnessListGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        // Updates progress bar
+        dailyGoalProgress.setValue(mindfulnessList.getSize());
+    }//GEN-LAST:event_deleteEntryActionPerformed
+
+    //SEARCH ENTRY BUTTON, asks user for entry they look for and returns the answer together with its index
+    private void searchEntryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchEntryActionPerformed
+        // TODO add your handling code here:
+        String search = JOptionPane.showInputDialog("Input full entry you're looking for:");
+        try {
+            mindfulnessList.searchEntry(search);
+        } catch (IOException ex) {
+            Logger.getLogger(MindfulnessListGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(MindfulnessListGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_searchEntryActionPerformed
 
     /**
      * @param args the command line arguments
@@ -278,11 +396,12 @@ public class MindfulnessListGUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addEntry;
+    private javax.swing.JButton backButton;
     private javax.swing.JButton changeGoal;
     private javax.swing.JProgressBar dailyGoalProgress;
     private javax.swing.JButton deleteEntry;
     private javax.swing.JButton editEntry;
-    private javax.swing.JButton jButton5;
+    private javax.swing.JLabel goalNo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
