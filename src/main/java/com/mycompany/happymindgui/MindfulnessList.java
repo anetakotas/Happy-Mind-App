@@ -28,7 +28,7 @@ public class MindfulnessList extends MindfulnessListActivity {
     
     // Sets connection with the database
     public void getConnection() throws SQLException {
-        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/HappyMind", "root", "your password!!!!");
+        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/HappyMind", "root", "Kicia222");
     }
     
     private MindfulnessList() {

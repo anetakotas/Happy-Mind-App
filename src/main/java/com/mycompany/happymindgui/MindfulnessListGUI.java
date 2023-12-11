@@ -103,8 +103,12 @@ public class MindfulnessListGUI extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Berlin Sans FB", 0, 26)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(0, 102, 204));
         jLabel1.setText("Mindfulness List");
 
+        addEntry.setBackground(new java.awt.Color(204, 204, 204));
+        addEntry.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        addEntry.setForeground(new java.awt.Color(0, 102, 204));
         addEntry.setText("Add New Entry");
         addEntry.setDefaultCapable(false);
         addEntry.setFocusPainted(false);
@@ -114,6 +118,9 @@ public class MindfulnessListGUI extends javax.swing.JFrame {
             }
         });
 
+        editEntry.setBackground(new java.awt.Color(204, 204, 204));
+        editEntry.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        editEntry.setForeground(new java.awt.Color(0, 102, 204));
         editEntry.setText("Edit Existing Entry");
         editEntry.setDefaultCapable(false);
         editEntry.setFocusPainted(false);
@@ -123,6 +130,9 @@ public class MindfulnessListGUI extends javax.swing.JFrame {
             }
         });
 
+        deleteEntry.setBackground(new java.awt.Color(204, 204, 204));
+        deleteEntry.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        deleteEntry.setForeground(new java.awt.Color(0, 102, 204));
         deleteEntry.setText("Delete Entry");
         deleteEntry.setDefaultCapable(false);
         deleteEntry.setFocusPainted(false);
@@ -132,6 +142,9 @@ public class MindfulnessListGUI extends javax.swing.JFrame {
             }
         });
 
+        searchEntry.setBackground(new java.awt.Color(204, 204, 204));
+        searchEntry.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        searchEntry.setForeground(new java.awt.Color(0, 102, 204));
         searchEntry.setText("Search For Entry");
         searchEntry.setDefaultCapable(false);
         searchEntry.setFocusPainted(false);
@@ -148,7 +161,10 @@ public class MindfulnessListGUI extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(listDisplay);
 
-        backButton.setText("Back");
+        backButton.setBackground(new java.awt.Color(204, 204, 204));
+        backButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        backButton.setForeground(new java.awt.Color(0, 102, 204));
+        backButton.setText("Main Menu");
         backButton.setDefaultCapable(false);
         backButton.setFocusPainted(false);
         backButton.addActionListener(new java.awt.event.ActionListener() {
@@ -157,8 +173,12 @@ public class MindfulnessListGUI extends javax.swing.JFrame {
             }
         });
 
+        jLabel2.setForeground(new java.awt.Color(0, 102, 204));
         jLabel2.setText("Goal:");
 
+        changeGoal.setBackground(new java.awt.Color(204, 204, 204));
+        changeGoal.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        changeGoal.setForeground(new java.awt.Color(0, 102, 204));
         changeGoal.setText("Change Goal");
         changeGoal.setDefaultCapable(false);
         changeGoal.setFocusPainted(false);
@@ -222,7 +242,7 @@ public class MindfulnessListGUI extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(changeGoal)
                             .addComponent(backButton))))
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
 
         pack();
