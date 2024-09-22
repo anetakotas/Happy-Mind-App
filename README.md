@@ -25,3 +25,8 @@ Engaging in regular physical activity is known to have a positive impact on ment
 Another section in the HappyMind application is gratitude list – proven method of shifting your thoughts to the positive experiences in your life, which leads to several positive benefits to one's well-being. 
 
 In this activity user will be able to create a list with things they are grateful for (or simply with things they are happy about). User will be able to add new entries to the list, delete chosen entries and search for entries which include a certain word. Additionally, user will have access to a progress bar signifying number of daily entries and how many entries they have left to reach that daily goal. Person engaging with the application would be able to set that goal and change it accordingly to their preferences.   
+
+![image](https://github.com/user-attachments/assets/22dc2026-17a2-4931-a5a2-607ec3f018b9)
+![image](https://github.com/user-attachments/assets/6e2d8463-3c9e-458c-8920-7ac9db5a1c59)
+![image](https://github.com/user-attachments/assets/74cb102a-baa0-4688-a345-13403b588a02)
+![image](https://github.com/user-attachments/assets/afa14064-0071-4064-9618-d0376d591a4e)
